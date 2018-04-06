@@ -1,7 +1,3 @@
-<?php 
-declare(strict_types = 1);
- ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,154 +30,357 @@ declare(strict_types = 1);
 <?php 
 
 
-echo "<br />";
-
-
-
-$planets = ["Меркурий", "Венера", "Земля", "Марс"];
-$y = 17;
-
-function foo($planets, $x = 0) 
+class MathComplex 
 {
-	foreach ($planets as $key => $value) {
-		echo $key . " => " . $value . "<br />";
-	}
+	public $re, $im;
 
-	static $x;
-
-	$x++;
-	echo $x . "<br />";
-
-}
-
-foo($planets);
-foo($planets);
-
-function look() 
-{
-	echo func_num_args();
-	$arr = func_get_args();
-
-	for ($i=0; $i < func_num_args(); $i++) { 
-		echo $arr[$i] ."<br />";
-	}
-	echo func_get_arg(1);
-
-}
-
-// look(...$planets);
-
-function rex($n) 
-{
-	if($n == 1) return "stop";
-	rex($n - 1);
-	echo $n . "<br />";
-}
-
-call_user_func("look", 5, 8, 9);
-echo "<br />";
-
-
-function collect($arr, $callback) 
-{
-	foreach ($arr as $value) {
-		if(!$callback($value)) yield $value;
+	function add($re, $im) {
+		$this->re += $re;
+		$this->im += $im;
 	}
 }
 
-$arr = [1, 2, 3, 4];
+$d = new MathComplex;
 
-$collect = collect($arr, function($e) 
+$d->re = 6;
+$d->im = 10;
+
+$d->add(12, 2);
+
+echo $d->re;
+
+echo "<br />";
+
+class MathComplex1 
 {
-	if($e % 2 == 0) {
-		return true;
-	} else {
-		return false;
+	public $re, $im;
+
+	function add(MathComplex1 $y) 
+	{
+		$this->re += $y->re;
+		$this->im += $y->im;
 	}
-});
 
-$collect2 = collect($arr, function($e) {
-	return $e * $e;
-});
-
-foreach ($collect as $value) {
-	echo "<br />".  $value;
+	function __toString() 
+	{
+		return "({$this->re}, {$this->im})";
+	}
 }
 
+$a = new MathComplex1;
+
+$a->re = 314;
+$a->im = 101;
+echo $a;
 echo "<br />";
 
-$str = "HELLO world";
-echo "{$str[2]}<br />";
-$str = "Привет";
-echo "{$str[2]}<br />";
+$b = new MathComplex1;
+$b->re = 303;
+$b->im = 6;
 
-echo strlen($str);
-echo mb_strlen($str);
+$a->add($b);
 
-echo "<br />";
-
-$zero = 0;
-
-if("$zero" == "") echo 4;
-if($zero == "") echo 3;
-echo gettype(strval($zero));
-echo "<br />";
+echo $a->__toString();
 
 
 echo "<br />";
 
-$str = 'Help me %s, you Привет %d';
-$repl = ["Help" => "Give", "Give" => "Help"];
+class MathComplex2
+{
+	public $re, $im;
 
-$d = str_replace(array_keys($repl), array_values($repl) ,$str);
-$f = strtr($str, $repl);
+	function __construct($re = 0, $im = 0) 
+	{
+		$this->re = $re;
+		$this->im = $im;
+	}
 
-echo $d. "<br />";
-echo $f. "<br />";
+	function add(MathComplex2 $y) 
+	{
+		$this->re += $y->re;
+		$this->im += $y->im;
+	}
+
+	function __toString() 
+	{
+		return "({$this->re}, {$this->im})";
+	}
+}
+
+$a = new MathComplex2;
+$a = new MathComplex2();
+$a = new MathComplex2(221);
+$a = new MathComplex2(221, 59);
+
+$a->add(new MathComplex2(32, 42));
+echo $a;
+
+class FileLogger0 
+{
+	public $f;
+	public $name;
+	public $lines = [];
+
+	public function __construct($name, $fname) 
+	{
+		$this->name = $name;
+		$this->f = fopen($fname, "a+");
+	}
+
+}
 
 
-$new = htmlspecialchars("<a href='test'>ссылка</a>");
+class Father 
+{
+	public $children = [];
 
-$to = "dsf";
-$form = 10;
+	function __destruct() {
+		echo "Отец умер <br />";
+	}
+}
 
-echo sprintf($str, $to, $form);
+/*class Child 
+{
+	public $father;
+
+	function __construct(Father $father) {
+		$this->father = $father;
+	}
+
+	function __destruct() {
+		echo "Child died <br />";
+	}
+}
+
+$father = new Father;
+$child = new Child($father);
+
+// $father->children[] = $child;
+echo "Пока все живы";
+$father = $child = null;*/
+
+
+/*class MyDestructableClass {
+   function __construct() {
+       print "Конструктор\n";
+       $this->name = "MyDestructableClass";
+   }
+
+   function __destruct() {
+       print "Уничтожается " . $this->name . "\n";
+   }
+}
+
+$obj = new MyDestructableClass();
+echo "<br />";*/
+
+class Hotel 
+{
+	private $exit;
+
+	public function escape() {
+		$this->findWayOut();
+		echo "lets go {$this->exit}";
+	}
+
+	public function lock() {
+		$this->exit = null;
+	}
+
+	private function findWayOut() {
+		$this->exit = "main red";
+	}
+}
+
+$a = new Hotel;
+// $a->findWayOut();
+$a->escape();
+
 echo "<br />";
 
+class Counter 
+{
+	private static $count = 0;
+
+	public function __construct() {
+		self::$count++;
+	}
+	public function __destruct() {
+		self::$count--;
+	}
+	public static function getCount() {
+		return self::$count;
+	}
+}
+
+for ($objs = [], $i = 0; $i < 6; $i++) {
+	$objs[] = new Counter();
+}
+
+echo "-- {$objs[0]->getCount()}";
+$objs[5] = null;
+
+echo "<br />";
+echo "++ {$objs[0]->getCount()}";
+$objs = [];
+echo Counter::getCount();
+echo "<br />";
+
+class cls 
+{
+	const NAME = "cls";
+
+	public function method() {
+		// echo $this->NAME; ошибка
+		echo self::NAME;
+		echo "<br />";
+		echo cls::NAME;
+		echo "<br />";
+	}
+}
+
+echo cls::NAME;
+echo cls::method();
+
+echo defined('cls::NAME');
+echo "<br />";
+
+class Hooker 
+{
+	public $arr = [15];
+
+	public function __get($name) {
+		echo $this->arr[$name] . "blue";
+	}
+
+	public function __set($name, $val) {
+		echo $this->arr[$name] . "red" . $val . $name;
+	}
+
+	public function __call($name, $array) {
+		echo $name . $array[0];
+	}
+}
+
+
+$hook = new Hooker();
+$hook->method;
+$hook->method();
+
+$hook->method = 43;
+echo "<br />";
+
+class Human 
+{
+	private static $i = 12;
+
+	public $dns;
+	public $text;
+
+	public function __construct() {
+		$this->dns = self::$i++;
+		$this->text = "God";
+	}
+	
+	public function __clone() {
+		$this->dns = $this->dns . "clone";
+	}
+}
+
+$neo = new Human();
+$virtual = clone $neo;
+
+echo "Neo {$neo->dns}, {$neo->text}";
+echo "<br />";
+echo "Virtual {$virtual->dns}, {$virtual->text}";
+echo "<br />";
+
+class cls1 
+{
+	public $var;
+	public function __construct($var) {
+		$this->var = $var;
+	}
+}
+
+$obj = new cls1(100);
+
+print_r($obj);
+echo "<br />";
+
+class user 
+{
+	public $name;
+	public $password;
+	public $referrer;
+	public $time;
+
+	public function __construct($name, $password){
+		$this->name = $name;
+		$this->password = $password;
+		$this->referrer = $_SERVER['PHP_SELF'];
+		$this->time = time();
+	}
+
+	public function __sleep() {
+		return ['name', 'referrer', 'time'];
+	}
+
+	public function __wakeup() {
+		$this->time = time();
+	} 
+}
+
+$obj = new user('nick', 1234);
 echo "<pre>";
+print_r($obj);
+echo "</pre>";
+
+$object = 'O:4:"user":3:{s:4:"name";s:4:"nick";s:8:"referrer";s:10:"/index.php";s:4:"time";i:1520528833;}';
+$obj = unserialize($object);
+
+
+print_r($obj);
+
+class Base 
+{
+	public static function title() {
+		echo __CLASS__;
+	}
+	public static function test() {
+		self::title();
+	}
+}
+
+class Child extends Base 
+{
+	public static function title() {
+		echo __CLASS__;
+	}
+}
 echo "<br />";
 
-$arr = [
-	"a" => "Zero",
-	"b" => "Weapon",
-	"c" => "Alpha",
-	"d" => "Gnom"
-];
-
-
-$files = array("img12.png", "img2.png", "img10.png", "img1.png");
-
-$n = [1, 2, 1, 2, 3, 4, 5];
-
-$ex = array_unique($n);
-
-
-echo "<br />";
-print_r($ex);
-
-$arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, "r" => "Привет");
-
-$d = json_encode($arr, JSON_UNESCAPED_UNICODE);
-
-$x = json_decode($d);
-
-print_r($x);
-
-
-
+echo Child::test();
 
 
 
 echo "<br />";
+
+class Dumper 
+{
+	public static function print($obj) {
+		print_r($obj);
+	}
+}
+
+Dumper::print( new class {
+	public $title;
+	public function __construct() {
+		$this->title = "Hello world!";
+	}	
+});
+
+
+
 /* ____________________ */
 
